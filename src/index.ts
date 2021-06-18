@@ -1,9 +1,14 @@
 import express from "express";
+import mongoose from "mongoose";
+import bodyParser from "body-parser";
+import logger from "./config/logger";
+import config from "./config/index";
+import TaskRouter from "./api/index";
+
 const app = express();
 
 // MongoDB connection
-import mongoose from "mongoose";
-const url = "mongodb://localhost:27017/Task";
+const url = `mongodb://${config.mongoUser}:${config.mongoPassword}@${config.mongoHost}:${config.mongoPort}/${config.mongoDatabase}`;
 
 mongoose.connect(url,
     {
@@ -13,24 +18,22 @@ mongoose.connect(url,
     },
     (err) => {
         if (err) {
-            // tslint:disable-next-line:no-console
-            console.log("Error on connection to MongoDB", err.message);
+            logger.error(`Error on connection to MongoDB: ${err.message}`);
         }
     }
 );
 
 mongoose.connection.once("open", () => {
-    // tslint:disable-next-line:no-console
-    console.log("Connected to MongoDB");
+    logger.info("MongoDB is connected");
 });
 
-app.get("/", (req, res) => {
-    res.send("Hello world in TS");
-});
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use('/task', TaskRouter);
 
 const port: number = 3000;
 
 app.listen(port, () => {
-    // tslint:disable-next-line:no-console
-    console.log(`Server started on port: ${port}`);
+    logger.info(`Server start on port: ${port}`);
 });
