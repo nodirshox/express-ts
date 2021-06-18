@@ -16,5 +16,9 @@
   "bugs": {
     "url": "https://github.com/nodirshox/expres-ts/issues"
   },
-  "homepage": "https://github.com/nodirshox/expres-ts#readme"
+  "homepage": "https://github.com/nodirshox/expres-ts#readme",
+  "dependencies": {
+    "@types/express": "^4.17.12",
+    "express": "^4.17.1"
+  }
 }
