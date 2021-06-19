@@ -4,6 +4,8 @@ import TaskAPI from "./task";
 const router = express.Router();
 
 router.post('/', TaskAPI.create);
-router.get('/', TaskAPI.get);
+router.get('/', TaskAPI.find);
+router.get('/:id', TaskAPI.get)
+router.put('/:id', TaskAPI.update)
 
 export default router;

@@ -17,10 +17,10 @@ const taskAPI = {
             })
         });
     },
-    get: (req: any, res: any) => {
+    find: (req: any, res: any) => {
         Task.find({}).exec((err, result) => {
             if (err) {
-                logger.error(`Error on getting task: ${err.message}`);
+                logger.error(`Error on finding task: ${err.message}`);
                 return res.status(500).json({
                     error: err.message
                 });
@@ -31,6 +31,28 @@ const taskAPI = {
             });
         });
     },
+    get: (req: any, res: any) => {
+        const taskId = req.params.id;
+        Task.findById(taskId).exec((err, result) => {
+            if (err) {
+                logger.error(`Error on getting task: ${err.message}`);
+                return res.status(500).json({
+                    error: err.message
+                });
+            }
+            if (result == null) {
+                return res.status(404).json({
+                    error: 'Not found'
+                })
+            }
+            res.json({
+                task: result
+            });
+        })
+    },
+    update: (req: any, res: any) => {
+        const taskId = req.params.id;
+    }
 }
 
 export default taskAPI;
