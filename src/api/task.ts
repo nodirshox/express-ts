@@ -36,7 +36,11 @@ const taskAPI = {
     },
     get: (req: any, res: any) => {
         const taskId = req.params.id;
-        Task.findById(taskId).exec((err, result) => {
+        const query: any = {
+            _id: taskId,
+            deleted_at: null
+        }
+        Task.findOne(query).exec((err, result) => {
             if (err) {
                 logger.error(`Error on getting task: ${err.message}`);
                 return res.status(500).json({
@@ -56,8 +60,12 @@ const taskAPI = {
     update: (req: any, res: any) => {
         const taskId = req.params.id;
         const newTask = req.body;
+        const query: any = {
+            _id: taskId,
+            deleted_at: null
+        }
 
-        Task.findById(taskId).exec((err, result) => {
+        Task.findOne(query).exec((err, result) => {
             if (err) {
                 logger.error(`Error on updating task: ${err.message}`);
                 return res.status(500).json({
