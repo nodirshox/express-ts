@@ -13,7 +13,7 @@ const taskAPI = {
                 });
             }
             res.json({
-                task_id: result,
+                task_id: result.id,
             })
         });
     },

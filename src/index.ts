@@ -1,6 +1,5 @@
 import express from "express";
 import mongoose from "mongoose";
-import bodyParser from "body-parser";
 import logger from "./config/logger";
 import config from "./config/index";
 import TaskRouter from "./api/index";
@@ -27,8 +26,8 @@ mongoose.connection.once("open", () => {
     logger.info("MongoDB is connected");
 });
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.json());
+app.use(express.urlencoded({extended:true}));
 
 app.use('/task', TaskRouter);
 
