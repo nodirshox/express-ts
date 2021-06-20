@@ -25,7 +25,10 @@ const taskAPI = {
         const DEFAULT_PAGE_LIMIT: number = 10;
         const options: any = {
             skip: (req.query.page ? req.query.page - 1 : 0) * (req.query.limit ? req.query.limit : DEFAULT_PAGE_LIMIT),
-            limit: req.query.limit ? parseInt(req.query.limit, 10) : DEFAULT_PAGE_LIMIT
+            limit: req.query.limit ? parseInt(req.query.limit, 10) : DEFAULT_PAGE_LIMIT,
+            sort: {
+                created_at: "desc"
+            }
         }
         async.parallel(
             [
