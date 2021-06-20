@@ -1,5 +1,6 @@
 import Task from "../modules/Task";
 import logger from "../config/logger";
+import async from "async";
 
 const taskAPI = {
     create: (req: any, res: any) => {
@@ -21,18 +22,44 @@ const taskAPI = {
         const query: any = {
             deleted_at: null
         }
-        Task.find(query).exec((err, result) => {
-            if (err) {
-                logger.error(`Error on finding task: ${err.message}`);
-                return res.status(500).json({
-                    error: err.message
-                });
+        const DEFAULT_PAGE_LIMIT: number = 10;
+        const options: any = {
+            skip: (req.query.page ? req.query.page - 1 : 0) * (req.query.limit ? req.query.limit : DEFAULT_PAGE_LIMIT),
+            limit: req.query.limit ? parseInt(req.query.limit, 10) : DEFAULT_PAGE_LIMIT
+        }
+        async.parallel(
+            [
+                (cb: any) => {
+                    Task.find(query, null, options).exec((err, tasks) => {
+                        if (err) {
+                            logger.error(`Error on finding task: ${err.message}`);
+                            return res.status(500).json({
+                                error: err.message
+                            });
+                        }
+                        return cb(null, tasks || [])
+                    });
+                },
+                (cb: any) => {
+                    Task.countDocuments(query).exec((err, count) => {
+                        if (err) {
+                            logger.error(`Error on finding task: ${err.message}`);
+                            return res.status(500).json({
+                                error: err.message
+                            });
+                        }
+
+                        return cb(null, count || 0);
+                    });
+                }
+            ],
+            (err: any, results: any) => {
+                return res.json({
+                    task: results[0],
+                    count: results[1]
+                })
             }
-            res.json({
-                tasks: result,
-                count: result.length
-            });
-        });
+        )
     },
     get: (req: any, res: any) => {
         const taskId = req.params.id;
