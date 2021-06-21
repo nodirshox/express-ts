@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import Task from "../modules/Task";
-import logger from "../config/logger";
+import Task from "../../modules/Task";
+import logger from "../../config/logger";
 import async from "async";
 
 export const create = async (req: Request, res: Response) => {
@@ -107,6 +107,7 @@ export const get = async (req: Request, res: Response) => {
 export const update = async (req: Request, res: Response) => {
     const taskId = req.params.id;
     const newTask = req.body;
+    logger.info("Task update request: " + taskId, newTask);
     const query: any = {
         _id: taskId,
         deleted_at: null
@@ -146,6 +147,7 @@ export const update = async (req: Request, res: Response) => {
 
 export const remove = async (req: Request, res: Response) => {
     const taskId = req.params.id;
+    logger.info("Delete task request: " + taskId);
     const query: any = {
         _id: taskId,
         deleted_at: null

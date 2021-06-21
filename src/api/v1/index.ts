@@ -1,7 +1,12 @@
 import express from "express"
 import * as TaskAPI from "./task";
+import swaggerUi from "swagger-ui-express";
+import { docs } from "../../docs/index";
 
 const router = express.Router();
+
+// swagger
+router.use('/swagger',swaggerUi.serve,swaggerUi.setup(docs));
 
 // default
 router.get("/", (req, res) => res.json({ "message": "API is working..." }));

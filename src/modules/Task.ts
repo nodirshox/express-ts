@@ -25,10 +25,11 @@ const TaskSchema = new Schema(
         },
         created_at: {
             type: Date,
-            default: Date.now,
+            default: Date.now
         },
         updated_at: {
-            type: Date
+            type: Date,
+            default: Date.now
         },
         deleted_at: {
             type: Date

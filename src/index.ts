@@ -3,7 +3,7 @@ import express from "express";
 import mongoose from "mongoose";
 import logger from "./config/logger";
 import config from "./config/index";
-import Router from "./api/index";
+import RouterV1 from "./api/v1/index";
 
 dotenv.config();
 
@@ -32,7 +32,8 @@ mongoose.connection.once("open", () => {
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
-app.use('/api/v1', Router);
+// v1 routers
+app.use('/api/v1', RouterV1);
 
 // 404
 app.use((req, res) => {
