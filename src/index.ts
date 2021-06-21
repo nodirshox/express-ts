@@ -3,7 +3,7 @@ import express from "express";
 import mongoose from "mongoose";
 import logger from "./config/logger";
 import config from "./config/index";
-import TaskRouter from "./api/index";
+import Router from "./api/index";
 
 dotenv.config();
 
@@ -32,7 +32,7 @@ mongoose.connection.once("open", () => {
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
-app.use('/task', TaskRouter);
+app.use('/', Router);
 
 const PORT: number = parseInt(process.env.SERVICE_HTTP_PORT as string, 10);
 
