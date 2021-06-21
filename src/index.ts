@@ -1,8 +1,11 @@
+import * as dotenv from "dotenv";
 import express from "express";
 import mongoose from "mongoose";
 import logger from "./config/logger";
 import config from "./config/index";
 import TaskRouter from "./api/index";
+
+dotenv.config();
 
 const app = express();
 
@@ -31,8 +34,8 @@ app.use(express.urlencoded({extended:true}));
 
 app.use('/task', TaskRouter);
 
-const port: number = 3000;
+const PORT: number = parseInt(process.env.SERVICE_HTTP_PORT as string, 10);
 
-app.listen(port, () => {
-    logger.info(`Server start on port: ${port}`);
+app.listen(PORT, () => {
+    logger.info(`Server start on port: ${PORT}`);
 });

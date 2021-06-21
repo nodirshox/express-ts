@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/nodirshox/expres-ts#readme",
   "dependencies": {
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "mongodb": "^3.6.8",
     "mongoose": "^5.12.14",
@@ -29,6 +30,7 @@
   },
   "devDependencies": {
     "@types/async": "^3.2.6",
+    "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.12",
     "@types/node": "^15.12.2",
     "tslint": "^6.1.3",

@@ -4,6 +4,7 @@ const config = {
     mongoUser: getConfig("MONGO_USER", "task_service_admin"),
     mongoPassword: getConfig("MONGO_PASSWORD", "123456"),
     mongoDatabase: getConfig("MONGO_DATABASE", "task_service"),
+    serviceHTTPPort: getConfig("SERVICE_HTTP_PORT", "3000"),
 }
 
 function getConfig(name: string, def: string): string | string[] | undefined {
