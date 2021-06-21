@@ -32,7 +32,12 @@ mongoose.connection.once("open", () => {
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
-app.use('/', Router);
+app.use('/api/v1', Router);
+
+// 404
+app.use((req, res) => {
+    return res.status(404).json({"message": "API not found"});
+});
 
 const PORT: number = parseInt(process.env.SERVICE_HTTP_PORT as string, 10);
 
