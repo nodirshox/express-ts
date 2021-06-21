@@ -59,6 +59,13 @@ export const components = {
                     }
                 }
             }
-        }
+        },
+        securitySchemes: {
+            ApiKeyAuth: {
+              type: "apiKey",
+              name: "Authorization",
+              in: "header"
+            }
+        },
     }
 }

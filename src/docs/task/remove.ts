@@ -25,6 +25,11 @@ export const remove = {
             '500':{
                 description:"Server error"
             }
-        }
+        },
+        security: [
+            {
+              ApiKeyAuth: [] as string[]
+            }
+          ]
     }
 }
