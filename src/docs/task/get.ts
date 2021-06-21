@@ -1,7 +1,8 @@
 export const get = {
     get:{
         tags:['Task'],
-        description: "Get a task",
+        summary: "Get task",
+        description: "Get task",
         operationId: "getTask",
         parameters:[
             {

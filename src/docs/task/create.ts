@@ -1,6 +1,7 @@
 export const create = {
     post:{
         tags:['Task'],
+        summary: "Create task",
         description: "Create task",
         operationId: "createTask",
         parameters:[] as string[],
