@@ -1,8 +1,9 @@
+import { Request, Response } from "express";
 import Task from "../modules/Task";
 import logger from "../config/logger";
 import async from "async";
 
-export const create = (req: any, res: any) => {
+export const create = async (req: Request, res: Response) => {
     const request = req.body;
     logger.info("Task create request", request);
     const newTask = new Task(request);
@@ -15,19 +16,31 @@ export const create = (req: any, res: any) => {
             });
         }
         res.status(201).json({
-            task_id: result.id,
+            task: result
         })
     });
 }
 
-export const find = (req: any, res: any) => {
+export const find = async (req: Request, res: Response) => {
     const query: any = {
         deleted_at: null
     }
     const DEFAULT_PAGE_LIMIT: number = 10;
-    const options: any = {
-        skip: (req.query.page ? req.query.page - 1 : 0) * (req.query.limit ? req.query.limit : DEFAULT_PAGE_LIMIT),
-        limit: req.query.limit ? parseInt(req.query.limit, 10) : DEFAULT_PAGE_LIMIT,
+
+    const page: string = req.query.page as string;
+    const limit: string = req.query.limit as string;
+
+    interface IOptions {
+        skip: number,
+        limit: number,
+        sort: {
+            created_at: string
+        }
+    }
+
+    const options: IOptions = {
+        skip: (page ? parseInt(page, 10) - 1 : 0) * (limit ? parseInt(limit, 10) : DEFAULT_PAGE_LIMIT),
+        limit: limit ? parseInt(limit, 10) : DEFAULT_PAGE_LIMIT,
         sort: {
             created_at: "desc"
         }
@@ -67,7 +80,7 @@ export const find = (req: any, res: any) => {
     )
 }
 
-export const get = (req: any, res: any) => {
+export const get = async (req: Request, res: Response) => {
     const taskId = req.params.id;
     const query: any = {
         _id: taskId,
@@ -91,7 +104,7 @@ export const get = (req: any, res: any) => {
     })
 }
 
-export const update = (req: any, res: any) => {
+export const update = async (req: Request, res: Response) => {
     const taskId = req.params.id;
     const newTask = req.body;
     const query: any = {
@@ -131,7 +144,7 @@ export const update = (req: any, res: any) => {
     })
 }
 
-export const remove = (req: any, res: any) => {
+export const remove = async (req: Request, res: Response) => {
     const taskId = req.params.id;
     const query: any = {
         _id: taskId,
@@ -161,4 +174,3 @@ export const remove = (req: any, res: any) => {
         })
     })
 }
-
