@@ -35,10 +35,9 @@ app.use(express.urlencoded({extended:true}));
 // v1 routers
 app.use('/api/v1', RouterV1);
 
-// unknown requests
-app.use((req, res) => {
-    return res.status(404).json({"message": "API not found"});
-});
+// default and unknown requests
+app.get("/", (req, res) => res.json({ "message": "API is working..." }));
+app.use((req, res) => res.status(404).json({"message": "API not found"}));
 
 const PORT: number = parseInt(process.env.SERVICE_HTTP_PORT as string, 10);
 app.listen(PORT, () => {

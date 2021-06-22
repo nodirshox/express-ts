@@ -8,9 +8,6 @@ const router = express.Router();
 // swagger
 router.use('/swagger',swaggerUi.serve,swaggerUi.setup(docs));
 
-// default
-router.get("/", (req, res) => res.json({ "message": "API is working..." }));
-
 // task
 router.post("/task/", TaskAPI.create);
 router.get("/task/", TaskAPI.find);
