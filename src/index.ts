@@ -4,10 +4,7 @@ import mongoose from "mongoose";
 import logger from "./config/logger";
 import config from "./config/index";
 import RouterV1 from "./api/v1/index";
-
 dotenv.config();
-
-const app = express();
 
 // MongoDB connection
 const url = `mongodb://${config.mongoUser}:${config.mongoPassword}@${config.mongoHost}:${config.mongoPort}/${config.mongoDatabase}`;
@@ -30,19 +27,20 @@ mongoose.connection.once("open", () => {
     logger.info("MongoDB is connected");
 });
 
+const app = express();
+
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
 // v1 routers
 app.use('/api/v1', RouterV1);
 
-// 404
+// unknown requests
 app.use((req, res) => {
     return res.status(404).json({"message": "API not found"});
 });
 
 const PORT: number = parseInt(process.env.SERVICE_HTTP_PORT as string, 10);
-
 app.listen(PORT, () => {
     logger.info(`Server start on port: ${PORT}`);
 });
