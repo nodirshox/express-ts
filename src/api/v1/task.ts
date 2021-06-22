@@ -6,19 +6,22 @@ import async from "async";
 export const create = async (req: Request, res: Response) => {
     const request = req.body;
     logger.info("Task create request", request);
-    const newTask = new Task(request);
 
-    newTask.save((err, result) => {
-        if (err) {
-            logger.error(`Error on creating task: ${err.message}`);
-            return res.status(500).json({
-                error: err.message
-            });
-        }
+    if (!request.title || !request.author || request.is_active == null) {
+        return res.status(400).json({message: "Required fields not given"});
+    }
+
+    try {
+        const result = await Task.create(request);
         res.status(201).json({
             task: result
         })
-    });
+    } catch(error) {
+        logger.error(`Error on creating task: ${error.message}`);
+        res.status(500).json({
+            error: error.message
+        });
+    }
 }
 
 export const find = async (req: Request, res: Response) => {
@@ -82,97 +85,83 @@ export const find = async (req: Request, res: Response) => {
 
 export const get = async (req: Request, res: Response) => {
     const taskId = req.params.id;
-    const query: any = {
-        _id: taskId,
-        deleted_at: null
-    }
-    Task.findOne(query).exec((err, result) => {
-        if (err) {
-            logger.error(`Error on getting task: ${err.message}`);
-            return res.status(500).json({
-                error: err.message
-            });
+    logger.info("Task get request: ", taskId);
+
+    try {
+        const query: any = {
+            _id: taskId,
+            deleted_at: null
         }
+        const result = await Task.findOne(query);
+
         if (result == null) {
-            return res.status(404).json({
-                error: "Not found"
-            })
+            return res.status(404).json({ error: "Not found"});
         }
-        res.json({
-            task: result
+
+        res.json({ task: result });
+    } catch(error) {
+        logger.error(`Error on getting task: ${error.message}`);
+        res.status(500).json({
+            error: error.message
         });
-    })
+    }
 }
 
 export const update = async (req: Request, res: Response) => {
     const taskId = req.params.id;
     const newTask = req.body;
     logger.info("Task update request: " + taskId, newTask);
-    const query: any = {
-        _id: taskId,
-        deleted_at: null
+    if (!newTask.title || !newTask.author || newTask.is_active == null) {
+        return res.status(400).json({message: "Required fields not given"});
     }
-
-    Task.findOne(query).exec((err, result) => {
-        if (err) {
-            logger.error(`Error on updating task: ${err.message}`);
-            return res.status(500).json({
-                error: err.message
-            });
+    try {
+        const query: any = {
+            _id: taskId,
+            deleted_at: null
         }
-
+        const updateData = {
+            title: newTask.title,
+            author: newTask.author,
+            is_active: newTask.is_active,
+            updated_at: new Date()
+        }
+        const result = await Task.findOneAndUpdate(query, updateData)
         if (result == null) {
             return res.status(404).json({
                 error: "Not found"
             })
         }
-        result.title = newTask.title;
-        result.author = newTask.author;
-        result.is_active = newTask.is_active;
-        result.updated_at = new Date();
-
-        result.save((error, response) => {
-            if (error) {
-                logger.error(`Error on updating task: ${error.message}`);
-                return res.status(500).json({
-                    error: error.message
-                })
-            }
-            return res.json({
-                task: response
-            });
+        res.json({task: result});
+    } catch(error) {
+        logger.error(`Error on updating task: ${error.message}`);
+        return res.status(500).json({
+            error: error.message
         })
-    })
+    }
 }
 
 export const remove = async (req: Request, res: Response) => {
     const taskId = req.params.id;
     logger.info("Delete task request: " + taskId);
-    const query: any = {
-        _id: taskId,
-        deleted_at: null
-    }
-    Task.findOne(query).exec((err, result) => {
-        if (err) {
-            logger.error(`Error on deleting: ${err.message}`);
-            return res.status(500).json({
-                error: err.message
-            })
+    try {
+        const query: any = {
+            _id: taskId,
+            deleted_at: null
         }
+
+        const updateData = {
+            deleted_at: new Date()
+        }
+
+        const result = await Task.findOneAndUpdate(query, updateData);
         if (result == null) {
-            return res.status(404).json()
+            return res.status(404).json({message: "Task not found"});
         }
-        result.deleted_at = new Date();
-
-        result.save((error, response) => {
-            if (error) {
-                logger.error(`Error on deleting task: ${error.message}`);
-                return res.status(500).json({
-                    error: error.message
-                })
-            }
-
-            return res.status(204).json();
+        res.status(204).json();
+    } catch (error) {
+        logger.error(`Error on deleting task: ${error.message}`);
+        return res.status(500).json({
+            error: error.message
         })
-    })
+    }
 }
