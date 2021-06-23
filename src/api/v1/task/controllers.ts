@@ -7,9 +7,6 @@ export const create = tryAsync(async (req: Request, res: Response) => {
     const request = req.body;
     logger.info("Task create request", request);
 
-    if (!request.title || !request.author || request.is_active == null) {
-        throw new ApiError(400, 'VALIDATION_ERROR');
-    }
     const result = await Task.create(request);
     new ApiResponse(result, 201).send(res);
 });
@@ -65,9 +62,6 @@ export const update = tryAsync(async (req: Request, res: Response) => {
     const taskId = req.params.id;
     const newTask = req.body;
     logger.info("Task update request: " + taskId, newTask);
-    if (!newTask.title || !newTask.author || newTask.is_active == null) {
-        throw new ApiError(400, 'VALIDATION_ERROR');
-    }
 
     const query: any = {
         _id: taskId,
