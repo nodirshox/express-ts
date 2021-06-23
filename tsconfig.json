@@ -11,7 +11,10 @@
         "paths": {
             "*": [
                 "node_modules/*"
-            ]
+            ],
+            "@models/*": ["src/models/*"],
+            "@config/*": ["src/config/*"],
+            "@shared/*": ["src/shared/*"]
         }
     },
     "include": [

@@ -1,30 +1,22 @@
 import { Request, Response } from "express";
 import Task from "../../../models/Task";
 import logger from "../../../config/logger";
-import async from "async";
+import { tryAsync, ApiError, ApiResponse } from '../../../shared/index';
 
-export const create = async (req: Request, res: Response) => {
+export const create = tryAsync(async (req: Request, res: Response) => {
     const request = req.body;
     logger.info("Task create request", request);
 
     if (!request.title || !request.author || request.is_active == null) {
-        return res.status(400).json({ message: "Required fields not given" });
+        throw new ApiError(400, 'VALIDATION_ERROR');
     }
+    const result = await Task.create(request);
+    res.status(201).json({
+        task: result
+    });
+});
 
-    try {
-        const result = await Task.create(request);
-        res.status(201).json({
-            task: result
-        })
-    } catch (error) {
-        logger.error(`Error on creating task: ${error.message}`);
-        res.status(500).json({
-            error: error.message
-        });
-    }
-}
-
-export const find = async (req: Request, res: Response) => {
+export const find = tryAsync(async (req: Request, res: Response) => {
     const query: any = {
         deleted_at: null
     }
@@ -48,40 +40,12 @@ export const find = async (req: Request, res: Response) => {
             created_at: "desc"
         }
     }
-    async.parallel(
-        [
-            (cb: any) => {
-                Task.find(query, null, options).exec((err, tasks) => {
-                    if (err) {
-                        logger.error(`Error on finding task: ${err.message}`);
-                        return res.status(500).json({
-                            error: err.message
-                        });
-                    }
-                    return cb(null, tasks || [])
-                });
-            },
-            (cb: any) => {
-                Task.countDocuments(query).exec((err, count) => {
-                    if (err) {
-                        logger.error(`Error on finding task: ${err.message}`);
-                        return res.status(500).json({
-                            error: err.message
-                        });
-                    }
-
-                    return cb(null, count || 0);
-                });
-            }
-        ],
-        (err: any, results: any) => {
-            return res.json({
-                task: results[0],
-                count: results[1]
-            })
-        }
-    )
-}
+    const [items, count] = await Promise.all([
+        Task.find(query, {}, options),
+        Task.countDocuments(query)
+    ]);
+    new ApiResponse({ items, count }).send(res);
+});
 
 export const get = async (req: Request, res: Response) => {
     const taskId = req.params.id;
