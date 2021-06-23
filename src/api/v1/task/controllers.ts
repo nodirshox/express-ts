@@ -25,7 +25,6 @@ export const create = async (req: Request, res: Response) => {
 }
 
 export const find = async (req: Request, res: Response) => {
-    console.log(req.originalUrl);
     const query: any = {
         deleted_at: null
     }

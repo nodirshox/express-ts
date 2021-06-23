@@ -1,4 +1,4 @@
-import express, { Router, Application } from "express"
+import { Router } from "express"
 import TaskAPI from "./task/index";
 import swaggerUi from "swagger-ui-express";
 import { docs } from "../../docs/index";
