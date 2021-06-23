@@ -1,32 +1,14 @@
 import * as dotenv from "dotenv";
 import express from "express";
-import mongoose from "mongoose";
+import MongoDB from './config/mongo';
 import logger from "./config/logger";
-import config from "./config/index";
+
 import RouterV1 from "./api/v1/index";
 
 dotenv.config();
 
-// MongoDB connection
-const url = `mongodb://${config.mongoUser}:${config.mongoPassword}@${config.mongoHost}:${config.mongoPort}/${config.mongoDatabase}`;
-
-mongoose.connect(url,
-    {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        useCreateIndex: true,
-        useFindAndModify: false,
-    },
-    (err: any) => {
-        if (err) {
-            logger.error(`Error on connection to MongoDB: ${err.message}`);
-        }
-    }
-);
-
-mongoose.connection.once("open", () => {
-    logger.info("MongoDB is connected");
-});
+// Create new Mongoose connection instance and connect to it
+(new MongoDB()).connect();
 
 const app = express();
 
