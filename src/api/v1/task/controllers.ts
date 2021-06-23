@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import Task from "../../../models/Task";
 import logger from "../../../config/logger";
-import { tryAsync, ApiError, ApiResponse } from '../../../shared/index';
+import { ApiError, ApiResponse, tryAsync } from '../../../shared/index';
 
 export const create = tryAsync(async (req: Request, res: Response) => {
     const request = req.body;
@@ -11,9 +11,7 @@ export const create = tryAsync(async (req: Request, res: Response) => {
         throw new ApiError(400, 'VALIDATION_ERROR');
     }
     const result = await Task.create(request);
-    res.status(201).json({
-        task: result
-    });
+    new ApiResponse(result, 201).send(res);
 });
 
 export const find = tryAsync(async (req: Request, res: Response) => {
@@ -47,85 +45,63 @@ export const find = tryAsync(async (req: Request, res: Response) => {
     new ApiResponse({ items, count }).send(res);
 });
 
-export const get = async (req: Request, res: Response) => {
+export const get = tryAsync(async (req: Request, res: Response) => {
     const taskId = req.params.id;
     logger.info("Task get request: ", taskId);
 
-    try {
-        const query: any = {
-            _id: taskId,
-            deleted_at: null
-        }
-        const result = await Task.findOne(query);
-
-        if (result == null) {
-            return res.status(404).json({ error: "Not found" });
-        }
-
-        res.json({ task: result });
-    } catch (error) {
-        logger.error(`Error on getting task: ${error.message}`);
-        res.status(500).json({
-            error: error.message
-        });
+    const query: any = {
+        _id: taskId,
+        deleted_at: null
     }
-}
+    const result = await Task.findOne(query);
 
-export const update = async (req: Request, res: Response) => {
+    if (!result) {
+        throw new ApiError(404);
+    }
+    new ApiResponse(result).send(res);
+});
+
+export const update = tryAsync(async (req: Request, res: Response) => {
     const taskId = req.params.id;
     const newTask = req.body;
     logger.info("Task update request: " + taskId, newTask);
     if (!newTask.title || !newTask.author || newTask.is_active == null) {
-        return res.status(400).json({ message: "Required fields not given" });
+        throw new ApiError(400, 'VALIDATION_ERROR');
     }
-    try {
-        const query: any = {
-            _id: taskId,
-            deleted_at: null
-        }
-        const updateData = {
-            title: newTask.title,
-            author: newTask.author,
-            is_active: newTask.is_active,
-            updated_at: new Date()
-        }
-        const result = await Task.findOneAndUpdate(query, updateData)
-        if (result == null) {
-            return res.status(404).json({
-                error: "Not found"
-            })
-        }
-        res.json({ task: result });
-    } catch (error) {
-        logger.error(`Error on updating task: ${error.message}`);
-        return res.status(500).json({
-            error: error.message
-        })
-    }
-}
 
-export const remove = async (req: Request, res: Response) => {
+    const query: any = {
+        _id: taskId,
+        deleted_at: null
+    }
+    const updateData = {
+        title: newTask.title,
+        author: newTask.author,
+        is_active: newTask.is_active,
+        updated_at: new Date()
+    }
+    const result = await Task.findOneAndUpdate(query, updateData)
+    if (!result) {
+        throw new ApiError(404);
+    }
+    new ApiResponse(result).send(res);
+});
+
+export const remove = tryAsync(async (req: Request, res: Response) => {
     const taskId = req.params.id;
     logger.info("Delete task request: " + taskId);
-    try {
-        const query: any = {
-            _id: taskId,
-            deleted_at: null
-        }
 
-        const updateData = {
-            deleted_at: new Date()
-        }
-
-        const result = await Task.findOneAndUpdate(query, updateData);
-        if (result == null) {
-            return res.status(404).json({ message: "Task not found" });
-        }
-        res.status(204).json();
-    } catch (error) {
-        logger.error(`Error on deleting task: ${error.message}`);
-        return res.status(500).json({
-            error: error.message
-        })
+    const query: any = {
+        _id: taskId,
+        deleted_at: null
     }
-}
+
+    const updateData = {
+        deleted_at: new Date()
+    }
+
+    const result = await Task.findOneAndUpdate(query, updateData, { new: true });
+    if (!result) {
+        throw new ApiError(404);
+    }
+    new ApiResponse(result, 204).send(res);
+});
