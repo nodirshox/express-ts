@@ -9,5 +9,5 @@ Additions/improvements/changes made:
 5. Refactor Express routes.
 6. Use `tryAsync()` to avoid nested try/catch
 7. Validations separated from controllers, used Joi
-8. `async.parallel()` replaced by `Promise.all()`
+8. `async.parallel()` replaced with `Promise.all()`
 9. DB connection refactored
