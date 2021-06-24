@@ -1,4 +1,4 @@
-import Task from '../models/Task';
+import Task from '../../../models/Task';
 import { Request } from 'express';
 
 export default class TaskService {

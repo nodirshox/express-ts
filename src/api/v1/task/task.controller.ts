@@ -2,7 +2,8 @@ import { autoInjectable } from 'tsyringe';
 import { Request, Response } from "express";
 import logger from "../../../config/logger";
 import { ApiError, ApiResponse, tryAsync } from '../../../shared/index';
-import TaskService from "../../../services/TaskService";
+import TaskService from "./task.service";
+
 @autoInjectable()
 export default class TaskController {
     constructor(private readonly taskService: TaskService) { }

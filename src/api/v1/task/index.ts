@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { validate } from 'express-validation';
-import validations from './validations';
-import TaskController from './controllers';
+import validations from './task.validations';
+import TaskController from './task.controller';
 import { container } from 'tsyringe';
 
 const router = Router();
