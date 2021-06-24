@@ -3,7 +3,7 @@ import express from "express";
 import MongoDB from './config/mongo';
 import api from "./api/index";
 import logger from "./config/logger";
-import errorHander from './shared/errorHander';
+import { errorHandler } from './shared/index';
 import 'module-alias/register';
 
 dotenv.config();
@@ -24,7 +24,7 @@ app.get("/", (_, res) => res.json({ "message": "API is working..." }));
 app.use((_, res) => res.status(404).json({ "message": "API not found" }));
 
 // Globally handle errors
-app.use(errorHander);
+app.use(errorHandler);
 
 const PORT: number = parseInt(process.env.SERVICE_HTTP_PORT as string, 10);
 app.listen(PORT, () => {
