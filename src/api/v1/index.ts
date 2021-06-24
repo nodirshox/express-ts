@@ -1,18 +1,13 @@
-import express from "express"
-import * as TaskAPI from "./task";
+import { Router } from "express"
+import TaskAPI from "./task/index";
 import swaggerUi from "swagger-ui-express";
 import { docs } from "../../docs/index";
 
-const router = express.Router();
+const router = Router();
 
 // swagger
-router.use('/swagger',swaggerUi.serve,swaggerUi.setup(docs));
+router.use('/swagger', swaggerUi.serve, swaggerUi.setup(docs));
 
-// task
-router.post("/task/", TaskAPI.create);
-router.get("/task/", TaskAPI.find);
-router.get("/task/:id", TaskAPI.get);
-router.put("/task/:id", TaskAPI.update);
-router.delete("/task/:id", TaskAPI.remove);
+router.use('/task', TaskAPI);
 
 export default router;

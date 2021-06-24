@@ -1,3 +1,7 @@
+import dotenv from 'dotenv';
+
+dotenv.config();
+
 const config = {
     mongoHost: getConfig("MONGO_HOST", "localhost"),
     mongoPort: getConfig("MONGO_PORT", "27017"),

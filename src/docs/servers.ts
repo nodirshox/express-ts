@@ -1,8 +1,8 @@
 export const servers = {
-    servers:[
+    servers: [
         {
-            url:"http://localhost:3030/api/v1",
-            description:"Local server"
+            url: "http://localhost:3030/api/v1",
+            description: "Local server"
         },
     ]
 }
