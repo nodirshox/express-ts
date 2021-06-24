@@ -5,15 +5,15 @@ import TaskController from './controllers';
 import { container } from 'tsyringe';
 
 const router = Router();
-const controllers = container.resolve(TaskController);
+const controller = container.resolve(TaskController);
 
 router.route('/')
-  .get(controllers.find)
-  .post(validate(validations.create, { keyByField: true }), controllers.create);
+  .get(controller.find)
+  .post(validate(validations.create, { keyByField: true }), controller.create);
 
 router.route('/:id')
-  .get(controllers.get)
-  .put(validate(validations.create, { keyByField: true }), controllers.update)
-  .delete(controllers.remove);
+  .get(controller.get)
+  .put(validate(validations.create, { keyByField: true }), controller.update)
+  .delete(controller.remove);
 
 export default router;
