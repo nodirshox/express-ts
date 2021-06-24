@@ -1,9 +1,11 @@
 import { Router } from 'express';
-import * as controllers from './controllers';
 import { validate } from 'express-validation';
 import validations from './validations';
+import TaskController from './controllers';
+import { container } from 'tsyringe';
 
 const router = Router();
+const controllers = container.resolve(TaskController);
 
 router.route('/')
   .get(controllers.find)
