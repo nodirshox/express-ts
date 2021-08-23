@@ -5,9 +5,9 @@ export const basicInfo = {
         title:"Express server",
         description: "Express server API",
         contact:{
-            name:"Nodirbek Ergashev",
+            name:"Author",
             email:"mr.nodirbek77@gmail.com",
-            url:"https://ergashevn.blogspot.com"
+            url:"https://github.com/nodirshox"
         }
     }
 }

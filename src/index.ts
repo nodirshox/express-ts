@@ -20,14 +20,15 @@ app.use(express.urlencoded({ extended: true }));
 // API routers
 app.use('/api', api);
 
-// default and unknown requests
-app.get("/", (_, res) => res.json({ "message": "API is working..." }));
-app.use((_, res) => res.status(404).json({ "message": "API not found" }));
+// Default and unknown requests
+app.get("/", (_, res) => res.json({ "message": "API_IS_WORKING" }));
+app.use((_, res) => res.status(404).json({ "message": "API_NOT_FOUND" }));
 
 // Globally handle errors
 app.use(errorHandler);
 
 const PORT: number = parseInt(process.env.SERVICE_HTTP_PORT as string, 10);
+
 app.listen(PORT, () => {
-    logger.info(`Server start on port: ${PORT}`);
+    logger.info(`Server started on port: ${PORT}`);
 });
