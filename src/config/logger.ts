@@ -3,7 +3,7 @@ import winston from "winston";
 const logger = winston.createLogger({
     format: winston.format.combine(
         winston.format.label({
-            label: "Express server"
+            label: "express-server"
         }),
         winston.format.timestamp(),
         winston.format.splat(),
