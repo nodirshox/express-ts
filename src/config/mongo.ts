@@ -4,7 +4,7 @@ import logger from "./logger";
 
 const { connection } = mongoose;
 
-connection.once('error', () => logger.error(`Error on connection to   MongoDB`));
+connection.once('error', () => logger.error(`Error on connection to MongoDB`));
 connection.once('open', () => logger.info('MongoDB connection is established'));
 
 export default class MongoDB {
@@ -18,6 +18,11 @@ export default class MongoDB {
       useUnifiedTopology: true,
       useCreateIndex: true,
       useFindAndModify: false,
-    }, (err) => err && logger.error(`Error on connection to MongoDB: ${err.message}`));
+    }, (err) => {
+      if (err) {
+        logger.error(`Error on connection to MongoDB: ${err.message}`);
+        process.exit(1);
+      }
+    });
   }
 }
