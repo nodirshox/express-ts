@@ -19,7 +19,7 @@ export const update = {
             content:{
                 'application/json': {
                     schema:{
-                        $ref:'#/components/schemas/TaskInput'
+                        $ref:'#/components/schemas/TaskUpdate'
                     }
                 }
             }

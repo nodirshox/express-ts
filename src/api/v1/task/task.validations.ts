@@ -4,8 +4,14 @@ export default {
   create: {
     body: Joi.object({
       title: Joi.string().required(),
+      author: Joi.string().required()
+    })
+  },
+  update: {
+    body: Joi.object({
+      title: Joi.string().required(),
       author: Joi.string().required(),
       is_active: Joi.boolean().required()
     })
-  }
+  },
 }

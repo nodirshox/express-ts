@@ -34,7 +34,20 @@ export const components = {
                     },
                 }
             },
-            TaskInput:{
+            TaskCreate:{
+                type:'object',
+                properties:{
+                    title:{
+                        type:'string',
+                        example:"string"
+                    },
+                    author:{
+                        type: 'string',
+                        example: 'string'
+                    }
+                }
+            },
+            TaskUpdate:{
                 type:'object',
                 properties:{
                     title:{

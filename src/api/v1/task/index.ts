@@ -13,7 +13,7 @@ router.route('/')
 
 router.route('/:id')
   .get(controller.get)
-  .put(validate(validations.create, { keyByField: true }), controller.update)
+  .put(validate(validations.update, { keyByField: true }), controller.update)
   .delete(controller.remove);
 
 export default router;

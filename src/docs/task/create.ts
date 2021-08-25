@@ -9,7 +9,7 @@ export const create = {
             content:{
                 'application/json': {
                     schema:{
-                        $ref:'#/components/schemas/TaskInput'
+                        $ref:'#/components/schemas/TaskCreate'
                     }
                 }
             }
